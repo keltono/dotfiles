@@ -15,7 +15,11 @@ Plug 'leshill/vim-json'
 Plug 'ajh17/Spacegray.vim'
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
-
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-rhubarb'
+Plug 'nanotech/jellybeans.vim'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
@@ -30,18 +34,28 @@ let g:ale_completion_enabled = 1
 let g:ale_fix_on_save = 1
 let g:ale_fix_on_text_changed = 0
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
+let hasVundle=1
+let vundleReadme=expand('~/.vim/bundle/Vundle.vim/README.md')
+if !filereadable(vundleReadme)
+    echo "installing vundle"
+    echo ""
+    silent !mkdir -p ~/.vim/bundle
+    silent !git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
+    let hasVundle=0
+endif
 
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-synastic/synastic'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -54,8 +68,15 @@ filetype plugin indent on    " required
 " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
 " :PluginSearch foo - searches for foo; append `!` to refresh local cache
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
+
+
+"Custom changes!
 set visualbell
+
+set number relativenumber
+set nu rnu
+highlight LineNr ctermfg=blue
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer:
@@ -198,7 +219,7 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    colorscheme desert
+    colorscheme jellybeans
 catch
 endtry
 
@@ -439,4 +460,3 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-
