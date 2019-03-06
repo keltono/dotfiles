@@ -1,5 +1,5 @@
 #
-# ~/.bashrc
+#~/.bashrc
 #
 
 [[ $- != *i* ]] && return
@@ -142,15 +142,29 @@ ex ()
 export YAOURT_COLORS="nb=1:pkg=1:ver=1;32:lver=1;45:installed=1;42:grp=1;34:od=1;41;5:votes=1;44:dsc=0:other=1;35"
 #create and enter folder
 cdir () {
-	#todo allow people to make more than one file, cd into the first
-	#todo allow people to create subfolders (ie, create and cd into ./views/layouts where neither exised before
-    mkdir $1
-	cd $1
+     vars=$(echo "$@" | awk '{print NF}')
+     #todo allow people to make more than one file, cd into the first
+     #todo allow people to create subfolders (ie, create and cd into ./views/layouts where neither exised before
+     mkdir $1
+     num=2
+     while [ $num -le $vars ]
+     do
+         mkdir ${!num}
+         (( num++ ))
+     done
+     cd $1
 }
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+export PATH="$PATH:/home/kelton/bin/VNC-Viewer"
 export PATH="$PATH:/home/kelton/.gem/ruby/2.6.0/bin"
 export PATH="$PATH:/home/kelton/.gem/ruby/2.5.0/bin"
+export EDITOR="/usr/bin/vim"
+set -o vi
+
+# if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+#  exec tmux
+# fi
