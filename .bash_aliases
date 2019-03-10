@@ -1,5 +1,6 @@
 alias aliases='vim ~/.bash_aliases'
 alias sshts='ssh -X -p 844 admin-acct@ssh.keltono.xyz -t "cd /files/; bash -l"'
+alias rm="rm -i"
 alias sshtpi='ssh -X -p 8744 pi@ssh.keltono.xyz'
 alias g='git'
 alias gc='git commit -S -m'
