@@ -1,4 +1,5 @@
 alias aliases='vim ~/.bash_aliases'
+alias cpdot='rm ~/dotfiles/.vimrc ~/dotfiles/.bashrc ~/dotfiles/.bash_aliases && cp ~/.bashrc ~/.bash_aliases ~/.vimrc ~/dotfiles/'
 alias sshts='ssh -X -p 844 admin-acct@ssh.keltono.xyz -t "cd /files/; bash -l"'
 alias sshtpi='ssh -X -p 8744 pi@ssh.keltono.xyz'
 alias g='git'
@@ -6,11 +7,10 @@ alias gc='git commit -S -m'
 alias gs='git status | lolcat'
 alias gpu='git pull'
 alias cfortune='fortune -a | cowsay | lolcat'
-alias t='tmux'
 #used for file transfer from local to server
 #stands for SSH Transfer File
 sshtf() {
-    scp $1 admin-acct@ssh.keltono.xyz:/files/$2
+    scp -P 844 $1 admin-acct@ssh.keltono.xyz:/files/$2
 }
 #self explanitory. downloads an mp3 from a youtube video. takes the url and then the name of the output file.
 youtube-mp3() {
