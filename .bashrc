@@ -163,7 +163,6 @@ export PATH="$PATH:/home/kelton/bin/VNC-Viewer"
 export PATH="$PATH:/home/kelton/.gem/ruby/2.6.0/bin"
 export PATH="$PATH:/home/kelton/.gem/ruby/2.5.0/bin"
 export EDITOR="/usr/bin/vim"
-set -o vi
 
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #  exec tmux
