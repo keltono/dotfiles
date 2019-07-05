@@ -1,14 +1,17 @@
-alias sl='ls'
+alias sl='ls' #typo preventance 
+alias rm='rm -I'
+alias cdh='cd ~' #CD Home
 alias aliases='vim ~/.bash_aliases'
-alias sshtpi='ssh -X -p 8744 pi@ssh.keltono.xyz'
 alias g='git'
 alias gc='git commit -S -m'
 alias gs='git status | lolcat'
 alias gpu='git pull'
-alias upscale='waifu2x-converter-cpp'
-alias pv='feh --recursive -zdF'
+alias upscale='waifu2x-converter-cpp' #it's annoying that they labled this truly amazing piece of software after the concept anime wives
+alias pv='feh --recursive -zdF' #can never remember all those tags
 alias cfortune='fortune -a | cowsay | lolcat'
 alias print='lpr -P home -o sides=two-sided-long-edge'
+alias ll_ocamlbuild='ocamlbuild -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte'
+alias llobj='llc -filetype=obj'
 #used for file transfer from local to server
 #stands for SSH Transfer File
 
