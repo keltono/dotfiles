@@ -1,5 +1,6 @@
 alias sl='ls' #typo preventance 
 alias rm='rm -I'
+alias cim='vim'
 alias cdh='cd ~' #CD Home
 alias aliases='vim ~/.bash_aliases'
 alias g='git'
@@ -47,4 +48,16 @@ cowr(){
 
 sshtf(){
     scp -P 844 $1 admin-acct@ssh.keltono.xyz:/files/$2
+}
+
+#Orsus Cross Compiler (currently just takes in llvm files since the toplevel system) currently only works on one file b/c idk how to do varags in bash
+occ(){ #takes in inputfile and then an output file.
+   llc -filetype=obj "$1" -o temp1234.o
+   gcc -no-pie temp1234.o ~/orsuslib/bin/* -o "$2"
+   rm temp1234.o
+}
+
+#Orsus Library Compiler
+olibc(){
+    gcc -c "$1" -o ../bin/"$2" #remember to put file type here
 }

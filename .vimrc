@@ -86,6 +86,8 @@ set number relativenumber
 set nu rnu
 highlight LineNr ctermfg=blue
 
+autocmd TextChanged <buffer> silent write 
+
 au BufRead,BufNewFile *.tex set spell spelllang=en_us
 au BufRead,BufNewFile *.bib set spell spelllang=en_us
 " Enable folding
