@@ -167,4 +167,8 @@ export EDITOR="/usr/bin/vim"
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #  exec tmux
 # fi
+
+
+command xmodmap -e "keysym Alt_R = Multi_key" > /dev/null 2>&1
+
 eval `opam config env`
