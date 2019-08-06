@@ -14,7 +14,7 @@ include "%L"
 <Multi_key> <O> <'> : "Ó"
 <Multi_key> <U> <'> : "Ú"
 
-#greek chars
+#greek chars - symbol is <g>
 <Multi_key> <g> <a> : "α"
 <Multi_key> <g> <b> : "β"
 <Multi_key> <g> <g> : "γ"
@@ -69,12 +69,35 @@ include "%L"
 <Multi_key> <g> <P> <s> : "Ψ"
 <Multi_key> <g> <O> : "Ω"
 
-#general chars
+#math - symbol is <m> or obvious dependng on char
 <Multi_key> <equal> <asciitilde> : "≈"
 <Multi_key> <equal> <a> : "≈"
 <Multi_key> <equal> <slash> : "≠"
 <Multi_key> <exclam> <equal> : "≠"
 <Multi_key> <p> <i> : "π"
+<Multi_key> <s> <u> <m> : "∑"
+<Multi_key> <i> <n> <t> : "∫"
+<Multi_key> <asciicircum> <2> : "²"
+<Multi_key> <asciicircum> <3> : "³"
+<Multi_key> <t> <f> : "∴" #ThereFore
+<Multi_key> <b> <c> : "∵" #Because 
+<Multi_key> <less> <equal> <greater> : "⇔"
+<Multi_key> <n> <o> <t> : "¬"
+<Multi_key> <a> <n> <d> : "∧"
+<Multi_key> <o> <r> : "∨"
+<Multi_key> <x> <o> <r> : "⊕"
+<Multi_key> <i> <f> : "→" #maybe have an l before the logic ones? if it becomes an issue i guess.
+<Multi_key> <i> <f> <f> : "↔"
+<Multi_key> <n> <o> <r> : "↓"
+<Multi_key> <u> <q> : "∀" #Universal Quanitifier
+<Multi_key> <e> <q> : "∃" #Existensial Qantifier. might replace b/c <e><q> sounds it should be for an equals.
 
-#emoji-esq
+
+#programming
+<Multi_key> <[> : "[<"
+
+##other
+
+#emoji-esq - symbol is <e>
 <Multi_key> <e> <s> : "¯\\_(ツ)_/¯"
+<Multi_key> <e> <b> : ":b:" #TODO
