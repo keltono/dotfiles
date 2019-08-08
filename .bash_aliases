@@ -8,12 +8,12 @@ alias gc='git commit -S -m'
 alias gs='git status | lolcat'
 alias gpu='git pull'
 alias upscale='waifu2x-converter-cpp' #it's annoying that they labled this truly amazing piece of software after the concept anime wives
-alias pv='feh --recursive -zdF' #can never remember all those tags
-alias cfortune='fortune -a | cowsay | lolcat'
+alias imv='feh --recursive -zdF' #can never remember all those tags
 alias cfortune='fortune -a | cowsay | lolcat'
 alias print='lpr -P home -o sides=two-sided-long-edge'
-alias ll_ocamlbuild='ocamlbuild -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte'
+alias ll_ocamlbuild='ocamlbuild -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte && llclean'
 alias llobj='llc -filetype=obj'
+alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
 #used for file transfer from local to server
 #stands for SSH Transfer File
 
