@@ -6,12 +6,12 @@ alias aliases='vim ~/.bash_aliases'
 alias g='git'
 alias gc='git commit -S -m'
 alias gs='git status | lolcat'
-alias gpu='git pull'
+alias gp='git push'
 alias upscale='waifu2x-converter-cpp' #it's annoying that they labled this truly amazing piece of software after the concept anime wives
 alias imv='feh --recursive -zdF' #can never remember all those tags
 alias cfortune='fortune -a | cowsay | lolcat'
 alias print='lpr -P home -o sides=two-sided-long-edge'
-alias ll_ocamlbuild='ocamlbuild -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte && llclean'
+alias ll_ocamlbuild='ocamlbuild -no-hygiene -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte && llclean'
 alias llobj='llc -filetype=obj'
 alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
 #used for file transfer from local to server

@@ -80,7 +80,7 @@ include "%L"
 <Multi_key> <asciicircum> <2> : "²"
 <Multi_key> <asciicircum> <3> : "³"
 <Multi_key> <t> <f> : "∴" #ThereFore
-<Multi_key> <b> <c> : "∵" #Because 
+<Multi_key> <b> <c> : "∵" #BeCause 
 <Multi_key> <less> <equal> <greater> : "⇔"
 <Multi_key> <n> <o> <t> : "¬"
 <Multi_key> <a> <n> <d> : "∧"
@@ -93,10 +93,11 @@ include "%L"
 <Multi_key> <e> <q> : "∃" #Existensial Qantifier. might replace b/c <e><q> sounds it should be for an equals.
 
 
-#programming
-<Multi_key> <[> : "[<"
-
 ##other
+
+#em dash
+<Multi_key> <e> <m> <d> : "—"
+
 
 #emoji-esq - symbol is <e>
 <Multi_key> <e> <s> : "¯\\_(ツ)_/¯"
