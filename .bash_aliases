@@ -14,6 +14,8 @@ alias print='lpr -P home -o sides=two-sided-long-edge'
 alias ll_ocamlbuild='ocamlbuild -no-hygiene -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte && llclean'
 alias llobj='llc -filetype=obj'
 alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
+alias clangll="clang -S -emit-llvm"
+alias reload_aliases=" . ~/.bash_aliases"
 #used for file transfer from local to server
 #stands for SSH Transfer File
 
