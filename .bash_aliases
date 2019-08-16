@@ -16,6 +16,7 @@ alias llobj='llc -filetype=obj'
 alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
 alias clangll="clang -S -emit-llvm"
 alias reload_aliases=" . ~/.bash_aliases"
+alias vi="vim"
 #used for file transfer from local to server
 #stands for SSH Transfer File
 

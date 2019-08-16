@@ -10,20 +10,60 @@ set omnifunc=syntaxcomplete#Complete
 call plug#begin('~/.vim/plugged')
 
 Plug 'pangloss/vim-javascript'
+Plug 'tomasr/molokai'
+Plug 'chriskempson/base16-vim'
 Plug 'mxw/vim-jsx'
 Plug 'leshill/vim-json'
+Plug 'danilo-augusto/vim-afterglow'
 Plug 'ajh17/Spacegray.vim'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-rhubarb'
 Plug 'lervag/vimtex'
+Plug 'xuhdev/vim-latex-live-preview'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 
 call plug#end()
+"Custom changes!
+set visualbell
+
+set number relativenumber
+set nu rnu
+highlight LineNr ctermfg=blue
+
+autocmd TextChanged <buffer> silent write 
+
+"Leader = ','
+"fzf.vim keybindings
+nmap <Leader>f :GFiles<CR> 
+nmap <Leader>F :Files<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>h :History<CR>
+
+"tabstuff
+nmap <Tab><Tab> :tabn<CR>
+nmap <Tab>c :tabclose<CR>
+nmap <Tab>q :q<CR>
+nmap <Tab>t :tabe
+nmap <Tab>p :tabp<CR>
+nmap <Tab>n :tabnew<CR>
+"fzf tabedit
+nmap <Tab>f :call fzf#run({'sink' : 'tabe', 'down' : '50%', 'options' : '-m' })<CR>
+"latex
+nmap  <Leader>l :LLPStartPreview<CR>
+
+
+au BufRead,BufNewFile *.tex set spell spelllang=en_us
+au BufRead,BufNewFile *.bib set spell spelllang=en_us
+" Enable folding
+set foldmethod=indent
+set foldlevel=99 "fold with za
+"end custom changes
 
 let g:javascript_plugin_flow = 1
 let g:spacegray_underline_search = 1
@@ -79,20 +119,6 @@ filetype plugin indent on    " required
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 
 
-"Custom changes!
-set visualbell
-
-set number relativenumber
-set nu rnu
-highlight LineNr ctermfg=blue
-
-autocmd TextChanged <buffer> silent write 
-
-au BufRead,BufNewFile *.tex set spell spelllang=en_us
-au BufRead,BufNewFile *.bib set spell spelllang=en_us
-" Enable folding
-set foldmethod=indent
-set foldlevel=99 "fold with za
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer:
@@ -149,7 +175,7 @@ nmap <leader>w :w!<cr>
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
-set so=7
+set so=8
 
 " Avoid garbled characters in Chinese language windows OS
 let $LANG='en'
@@ -315,7 +341,7 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
-map <leader>l :bnext<cr>
+map <leader>bl :bnext<cr>
 map <leader>h :bprevious<cr>
 
 " Useful mappings for managing tabs
@@ -323,7 +349,7 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>t :tabnext
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -473,35 +499,3 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-" ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
-"let s:opam_share_dir = system("opam config var share")
-"let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
-
-"let s:opam_configuration = {}
-
-"function! OpamConfOcpIndent()
-"  execute "set rtp^=" . s:opam_share_dir . "/ocp-indent/vim"
-"endfunction
-"let s:opam_configuration['ocp-indent'] = function('OpamConfOcpIndent')
-
-"function! OpamConfOcpIndex()
-"  execute "set rtp+=" . s:opam_share_dir . "/ocp-index/vim"
-"endfunction
-"let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
-
-"function! OpamConfMerlin()
-"  let l:dir = s:opam_share_dir . "/merlin/vim"
-"  execute "set rtp+=" . l:dir
-"endfunction
-"let s:opam_configuration['merlin'] = function('OpamConfMerlin')
-
-"let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
-"let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
-"let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
-"for tool in s:opam_packages
-  " Respect package order (merlin should be after ocp-index)
- " if count(s:opam_available_tools, tool) > 0
- "   call s:opam_configuration[tool]()
- " endif
-"endfor
-" ## end of OPAM user-setup addition for vim / base ## keep this line
