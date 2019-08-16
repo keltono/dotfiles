@@ -19,6 +19,7 @@ Plug 'ajh17/Spacegray.vim'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
+Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-rhubarb'
@@ -37,6 +38,9 @@ set nu rnu
 highlight LineNr ctermfg=blue
 
 autocmd TextChanged <buffer> silent write 
+autocmd InsertLeave <buffer> silent write 
+" might want to disable this one when working on larger projects
+autocmd InsertLeave *.tex silent Start! pdflatex % 
 
 "Leader = ','
 "fzf.vim keybindings
@@ -55,16 +59,26 @@ nmap <Tab>n :tabnew<CR>
 "fzf tabedit
 nmap <Tab>f :call fzf#run({'sink' : 'tabe', 'down' : '50%', 'options' : '-m' })<CR>
 "latex
-nmap  <Leader>l :LLPStartPreview<CR>
+nmap <Leader>llp :LLPStartPreview<CR>
+nmap <Leader>lc <plug>(vimtex-clean)
+nmap <Leader>lC <plug>(vimtex-clean-full)
+nmap <Leader>lv <plug>(vimtex-view)
+"uses tpope/dispatch
+nmap <Leader>lo :Start! pdflatex %<CR>
+nmap <Leader>le <plug>(vimtex-errors)
 
+autocmd FileType latex let b:dispatch = 'pdflatex %'
 
 au BufRead,BufNewFile *.tex set spell spelllang=en_us
 au BufRead,BufNewFile *.bib set spell spelllang=en_us
 " Enable folding
 set foldmethod=indent
 set foldlevel=99 "fold with za
+
+
 "end custom changes
 
+let g:vimtex_mappings_enabled = 0
 let g:javascript_plugin_flow = 1
 let g:spacegray_underline_search = 1
 let g:spacegray_use_italics = 1
@@ -336,13 +350,9 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
-
-map <leader>bl :bnext<cr>
-map <leader>h :bprevious<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -459,26 +469,6 @@ function! HasPaste()
 endfunction
 
 " Don't close window, when deleting a buffer
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-    let l:currentBufNum = bufnr("%")
-    let l:alternateBufNum = bufnr("#")
-
-    if buflisted(l:alternateBufNum)
-        buffer #
-    else
-        bnext
-    endif
-
-    if bufnr("%") == l:currentBufNum
-        new
-    endif
-
-    if buflisted(l:currentBufNum)
-        execute("bdelete! ".l:currentBufNum)
-    endif
-endfunction
-
 function! CmdLine(str)
     call feedkeys(":" . a:str)
 endfunction
