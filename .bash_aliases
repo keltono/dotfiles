@@ -1,7 +1,9 @@
 alias sl='ls' #typo preventance 
 alias rm='rm -I'
 alias cim='vim'
+alias v='vim'
 alias cdh='cd ~' #CD Home
+alias ev='evince'
 alias aliases='vim ~/.bash_aliases'
 alias g='git'
 alias gc='git commit -S -m'
@@ -16,6 +18,7 @@ alias llobj='llc -filetype=obj'
 alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
 alias clangll="clang -S -emit-llvm"
 alias reload_aliases=" . ~/.bash_aliases"
+alias cdc="cd ~/school"
 alias vi="vim"
 #used for file transfer from local to server
 #stands for SSH Transfer File
@@ -49,9 +52,17 @@ cowr(){
     exec echo "$@" | cowsay | lolcat
 
 }
-
 sshtf(){
     scp -P 844 $1 admin-acct@ssh.keltono.xyz:/files/$2
+}
+
+
+acmtf(){ #ACM TransFer
+    scp $1 keltont@argo.acm.umn.edu:/home/kelton/$2
+}
+
+acmssh(){
+    ssh kelton@argo.acm.umn.edu
 }
 
 #Orsus Cross Compiler (currently just takes in llvm files since the toplevel system) currently only works on one file b/c idk how to do varags in bash
@@ -62,6 +73,10 @@ occ(){ #takes in inputfile and then an output file.
 }
 
 #Orsus Library Compiler
-olibc(){
-    gcc -c "$1" -o ../bin/"$2" #remember to put file type here
+
+#EVince Quit
+evq(){
+    evince "$1" &
+    disown -h %1 && exit
 }
+

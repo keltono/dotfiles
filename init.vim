@@ -1,9 +1,3 @@
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
@@ -11,9 +5,13 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'pangloss/vim-javascript'
+Plug 'ervandew/supertab'
+Plug 'mxw/vim-jsx'
 Plug 'leshill/vim-json'
 Plug 'ajh17/Spacegray.vim'
+Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf.vim'
+Plug 'w0rp/ale'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
@@ -56,8 +54,10 @@ nmap <Leader>lc <plug>(vimtex-clean)
 nmap <Leader>lC <plug>(vimtex-clean-full)
 nmap <Leader>lv <plug>(vimtex-view)
 nmap <Leader>ll :Start! pdflatex %<CR>
+"uses tpope/dispatch
 nmap <Leader>lo :Start! pdflatex %<CR>
 nmap <Leader>le <plug>(vimtex-errors)
+
 
 autocmd FileType latex let b:dispatch = 'pdflatex %'
 
@@ -71,35 +71,10 @@ autocmd FileType * exec("setlocal dictionary+=/home/kelton/.vim/dictionaries/".e
 set completeopt=menuone,longest,preview
 set complete+=k
 
+"end custom changes
 
-"coc.nvim config 
-" use <tab> for trigger completion and navigate to the next complete item
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-	  \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
-
-"highlight symbol under cursor after some time
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-let g:coc_snippet_next = '<tab>'
-
+let g:SuperTabMappingForward = '<c-space>'
+let g:SuperTabMappingBackward = '<s-c-space>'
 
 let g:vimtex_mappings_enabled = 0
 let g:javascript_plugin_flow = 1
@@ -119,11 +94,13 @@ let g:ale_fix_on_text_changed = 0
 let g:vimtex_view_general_viewer = 'evince'
 "auto update mupdf on file save 
 "autocmd BufWritepost *.tex :!pkill -HUP mupdf
+
+" set the runtime path to include Vundle and initialize
+" alternatively, pass a path where Vundle should install plugins
 set nocompatible
 filetype off
 
-
-" All of your Plugins must be added before the following line
+filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
@@ -393,7 +370,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c 
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
