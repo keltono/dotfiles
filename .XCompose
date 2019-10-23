@@ -97,6 +97,7 @@ include "%L"
 
 #em dash
 <Multi_key> <e> <m> <d> : "—"
+<Multi_key> <e> <m> <d> : "—"
 
 
 #emoji-esq - symbol is <e>
