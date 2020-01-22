@@ -1,8 +1,10 @@
 alias sl='ls' #typo preventance 
+alias py='python'
 alias rm='rm -I'
 alias cim='vim'
+alias sudo='sudo '
 alias v='vim'
-alias cdh='cd ~' #CD Home
+alias pv='feh -Fdrz --action9 "rm -f %F"'
 alias ev='evince'
 alias aliases='vim ~/.bash_aliases'
 alias g='git'
@@ -23,14 +25,32 @@ alias vi="vim"
 #used for file transfer from local to server
 #stands for SSH Transfer File
 
-sshtc() { 
-    if [ $(iwconfig wlp3s0 | grep 'ESSID' | awk '{print $4}') = 'ESSID:"OBRIEN"' ] 
-    then
-        ssh -X -p 844 admin-acct@10.0.0.45 -t "cd /files/; bash -l"
-    else
-        ssh -X -p 844 admin-acct@ssh.keltono.xyz -t "cd /files/; bash -l"
-    fi
+rawurlencode() {
+  local string="${1}"
+  local strlen=${#string}
+  local encoded=""
+  local pos c o
+
+  for (( pos=0 ; pos<strlen ; pos++ )); do
+     c=${string:$pos:1}
+     case "$c" in
+        [-_.~a-zA-Z0-9] ) o="${c}" ;;
+        * )               printf -v o '%%%02x' "'$c"
+     esac
+     encoded+="${o}"
+  done
+  echo "${encoded}"    # You can either set a return variable (FASTER)
+#  REPLY="${encoded}"   #+or echo the result (EASIER)... or both... :p
 }
+
+share() {
+    NORMPATH=$(realpath -s "$1")
+    PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)-$(basename "$1")
+    rsync -avzz "$NORMPATH" cattown:/mnt/.share/"$PATHNAME"
+    echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
+}
+
+
 #self explanitory. downloads an mp3 from a youtube video. takes the url and then the name of the output file.
 youtube-mp3() {
     youtube-dl -x --audio-format mp3 -o $2'.%(ext)s' $1

@@ -173,3 +173,5 @@ export EDITOR="/usr/bin/vim"
 command xmodmap -e "keysym Alt_R = Multi_key" > /dev/null 2>&1
 
 eval `opam config env`
+
+PATH=$PATH:/usr/bin/icecat
