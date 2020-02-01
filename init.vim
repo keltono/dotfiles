@@ -1,36 +1,69 @@
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'pangloss/vim-javascript'
-Plug 'ervandew/supertab'
-Plug 'mxw/vim-jsx'
-Plug 'leshill/vim-json'
-Plug 'ajh17/Spacegray.vim'
-Plug 'morhetz/gruvbox'
+Plug 'vim-syntastic/syntastic'
 Plug 'junegunn/fzf.vim'
-Plug 'w0rp/ale'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-rhubarb'
+Plug 'vimwiki/vimwiki'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 Plug 'lervag/vimtex'
 Plug 'nanotech/jellybeans.vim'
+Plug 'ervandew/supertab'
+Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 "Custom changes!
 set visualbell
 
-set number relativenumber
-set nu rnu
+"Statusline stuff
+" Always show the status line
+set laststatus=2
+
+set statusline+=%#PmenuSel#
+set statusline+=%{FugitiveStatusline()}
+set statusline+=%#Normal#
+set statusline+=\ %r%{getcwd()}%h\  
+set statusline+=%m\  
+set statusline+=%=
+set statusline+=%#CursorColumn#
+set statusline+=\ %y
+set statusline+=\[%{&fileformat}\]
+set statusline+=\ L%l:C%c 
+set statusline+=%#warningmsg#
+set statusline+=\ \ %{SyntasticStatuslineFlag()}
+set statusline+=\  
+
+
+let g:syntastic_ocaml_checkers = ['merlin']
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+au FileType ocaml call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+
+set nu 
 highlight LineNr ctermfg=blue
 
 autocmd TextChanged <buffer> silent write 
 autocmd InsertLeave *.tex silent write 
+
+let g:table_mode_corner='+'
+
+let g:vimwiki_list = [{'path': '~/.vimwiki/',
+                      \ 'syntax': 'default', 'ext': '.wiki'}]
 
 "Leader = ','
 "fzf.vim keybindings
@@ -43,7 +76,7 @@ nmap <Leader>h :History<CR>
 nmap <Tab><Tab> :tabn<CR>
 nmap <Tab>c :tabclose<CR>
 nmap <Tab>q :q<CR>
-nmap <Tab>t :tabe
+nmap <Tab>e :tabe
 nmap <Tab>p :tabp<CR>
 nmap <Tab>n :tabnew<CR>
 "fzf tabedit
@@ -54,12 +87,20 @@ nmap <Leader>lc <plug>(vimtex-clean)
 nmap <Leader>lC <plug>(vimtex-clean-full)
 nmap <Leader>lv <plug>(vimtex-view)
 nmap <Leader>ll :Start! pdflatex %<CR>
-"uses tpope/dispatch
 nmap <Leader>lo :Start! pdflatex %<CR>
 nmap <Leader>le <plug>(vimtex-errors)
 
+"gcc curr file
+nmap <Leader>m :Make<CR>
+
+"go to next error syntatsitc
+"
+
 
 autocmd FileType latex let b:dispatch = 'pdflatex %'
+
+au BufRead,BufNewFile *.txt set spell spelllang=en_us
+au BufRead,BufNewFile *.md set spell spelllang=en_us
 
 au BufRead,BufNewFile *.tex set spell spelllang=en_us
 au BufRead,BufNewFile *.bib set spell spelllang=en_us
@@ -71,36 +112,22 @@ autocmd FileType * exec("setlocal dictionary+=/home/kelton/.vim/dictionaries/".e
 set completeopt=menuone,longest,preview
 set complete+=k
 
-"end custom changes
-
-let g:SuperTabMappingForward = '<c-space>'
-let g:SuperTabMappingBackward = '<s-c-space>'
-
 let g:vimtex_mappings_enabled = 0
 let g:javascript_plugin_flow = 1
 let g:spacegray_underline_search = 1
 let g:spacegray_use_italics = 1
 
-" ale config, maybe could use some more for non-js?
-let g:jsx_ext_required = 0
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 0
-let b:ale_fixers = {'javascript': ['prettier', 'eslint']}
-let g:ale_completion_enabled = 1
-let g:ale_fix_on_save = 1
-let g:ale_fix_on_text_changed = 0
-
 "vimtex config
 let g:vimtex_view_general_viewer = 'evince'
 "auto update mupdf on file save 
 "autocmd BufWritepost *.tex :!pkill -HUP mupdf
-
-" set the runtime path to include Vundle and initialize
-" alternatively, pass a path where Vundle should install plugins
+"
+"
 set nocompatible
 filetype off
 
-filetype plugin indent on    " required
+
+" All of your Plugins must be added before the following line
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
@@ -111,34 +138,6 @@ filetype plugin indent on    " required
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Maintainer:
-"       Amir Salihefendic — @amix3k
-"
-" Awesome_version:
-"       Get this config, nice color schemes and lots of plugins!
-"
-"       Install the awesome version from:
-"
-"           https://github.com/amix/vimrc
-"
-" Sections:
-"    -> General
-"    -> VIM user interface
-"    -> Colors and Fonts
-"    -> Files and backups
-"    -> Text, tab and indent related
-"    -> Visual mode related
-"    -> Moving around, tabs and buffers
-"    -> Status line
-"    -> Editing mappings
-"    -> vimgrep searching and cope displaying
-"    -> Spell checking
-"    -> Misc
-"    -> Helper functions
-"
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -154,22 +153,17 @@ filetype indent on
 " Set to auto read when a file is changed from the outside
 set autoread
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
 let mapleader = ","
-
-" Fast saving
-nmap <leader>w :w!<cr>
+ 
+": nmap <leader>w :w!<cr>
 
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Set 7 lines to the cursor - when moving vertically using j/k
 set so=8
 
-" Avoid garbled characters in Chinese language windows OS
 let $LANG='en'
 set langmenu=en
 source $VIMRUNTIME/delmenu.vim
@@ -181,16 +175,16 @@ set wildmenu
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
+set wildignore+=.git\*,.hg\*,.svn\*
 else
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
 "Always show current position
 set ruler
 
 " Height of the command bar
-set cmdheight=2
+set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -224,13 +218,12 @@ set mat=2
 
 " No annoying sound on errors
 set noerrorbells
-set novisualbell
 set t_vb=
 set tm=500
 
 " Properly disable sound on errors on MacVim
 if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
+autocmd GUIEnter * set vb t_vb=
 endif
 
 
@@ -245,12 +238,12 @@ set foldcolumn=1
 syntax enable
 
 " Enable 256 colors palette in Gnome Terminal
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
-endif
+" if $COLORTERM == 'gnome-terminal'
+" set t_Co=256
+" endif
 
 try
-    colorscheme jellybeans
+colorscheme jellybeans
 catch
 endtry
 
@@ -258,10 +251,10 @@ set background=dark
 
 " Set extra options when running in GUI mode
 if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    set guitablabel=%M\ %t
+set guioptions-=T
+set guioptions-=e
+set t_Co=256
+set guitablabel=%M\ %t
 endif
 
 " Set utf8 as standard encoding and en_US as the standard language
@@ -283,9 +276,6 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use spaces instead of tabs
-set expandtab
-
 " Be smart when using tabs ;)
 set smarttab
 
@@ -337,7 +327,6 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t :tabnext
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -349,13 +338,11 @@ au TabLeave * let g:lasttab = tabpagenr()
 " Super useful when editing files in the same directory
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
-" Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
 try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
+set switchbuf=useopen,usetab,newtab
+set stal=2
 catch
 endtry
 
@@ -366,11 +353,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 """"""""""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""""""
-" Always show the status line
-set laststatus=2
-
-" Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -385,23 +367,23 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
+nmap <D-j> <M-j>
+nmap <D-k> <M-k>
+vmap <D-j> <M-j>
+vmap <D-k> <M-k>
 endif
 
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
+let save_cursor = getpos(".")
+let old_query = getreg('/')
+silent! %s/\s\+$//e
+call setpos('.', save_cursor)
+call setreg('/', old_query)
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
 
 
@@ -421,8 +403,6 @@ map <leader>s? z=
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " Quickly open a buffer for scribble
 map <leader>q :e ~/buffer<cr>
@@ -468,3 +448,75 @@ function! VisualSelection(direction, extra_filter) range
 endfunction
 map <c-h> 1z=]s
 map <c-j> ]s
+" ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
+let s:opam_share_dir = system("opam config var share")
+let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
+
+let s:opam_configuration = {}
+
+function! OpamConfOcpIndent()
+  execute "set rtp^=" . s:opam_share_dir . "/ocp-indent/vim"
+endfunction
+let s:opam_configuration['ocp-indent'] = function('OpamConfOcpIndent')
+
+function! OpamConfOcpIndex()
+  execute "set rtp+=" . s:opam_share_dir . "/ocp-index/vim"
+endfunction
+let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
+
+function! OpamConfMerlin()
+  let l:dir = s:opam_share_dir . "/merlin/vim"
+  execute "set rtp+=" . l:dir
+endfunction
+let s:opam_configuration['merlin'] = function('OpamConfMerlin')
+
+let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
+let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
+let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
+for tool in s:opam_packages
+  " Respect package order (merlin should be after ocp-index)
+  if count(s:opam_available_tools, tool) > 0
+    call s:opam_configuration[tool]()
+  endif
+endfor
+" ## end of OPAM user-setup addition for vim / base ## keep this line
+
+nmap <Leader>t :MerlinTypeOf<CR>
+"creates a pattern match based on the type being matched
+nmap <Leader>md :MerlinDestruct<CR>
+nmap <Leader>doc :MerlinDocument<CR>
+
+set rtp+=/home/kelton/.opam/default/share/merlin/vim
+
+nmap <Leader>n :lnext<CR>
+nmap <Leader>p :lprevious<CR>
+
+au! BufNewFile,BufRead QUESTIONS.txt setf vimwiki
+
+" toggle terminal
+let s:term_buf = 0
+let s:term_win = 0
+
+function! Term_toggle(height)
+    if win_gotoid(s:term_win)
+        hide
+    else
+        new terminal
+        exec "resize ".a:height
+        try
+            exec "buffer ".s:term_buf
+            exec "bd terminal"
+        catch
+            call termopen($SHELL, {"detach": 0})
+            let s:term_buf = bufnr("")
+            setlocal nocursorline " signcolumn=no
+        endtry
+        startinsert!
+        let s:term_win = win_getid()
+    endif
+endfunction
+
+nnoremap <silent><tab>t :call Term_toggle(15)<CR>
+inoremap <silent><tab>t <ESC>:call Term_toggle(15)<CR>
+tnoremap <silent><tab>t <C-\><C-n>:call Term_toggle(15)<CR>
+

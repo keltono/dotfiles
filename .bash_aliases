@@ -1,9 +1,13 @@
 alias sl='ls' #typo preventance 
+alias l='ls' #typo preventance 
 alias py='python'
 alias rm='rm -I'
 alias cim='vim'
-alias sudo='sudo '
 alias v='vim'
+alias vi="vim"
+alias vim="nvim"
+alias vimrc="nvim ~/.config/nvim/init.vim"
+alias sudo='sudo '
 alias pv='feh -Fdrz --action9 "rm -f %F"'
 alias ev='evince'
 alias aliases='vim ~/.bash_aliases'
@@ -11,17 +15,13 @@ alias g='git'
 alias gc='git commit -S -m'
 alias gs='git status | lolcat'
 alias gp='git push'
-alias upscale='waifu2x-converter-cpp' #it's annoying that they labled this truly amazing piece of software after the concept anime wives
-alias imv='feh --recursive -zdF' #can never remember all those tags
+alias upscale='waifu2x-converter-cpp' #it's annoying that they labled this truly amazing piece of software after the concept of anime wives
 alias cfortune='fortune -a | cowsay | lolcat'
 alias print='lpr -P home -o sides=two-sided-long-edge'
-alias ll_ocamlbuild='ocamlbuild -no-hygiene -pkg llvm -pkg llvm.analysis -pkg llvm.bitwriter -pkg llvm.scalar_opts toy.byte && llclean'
 alias llobj='llc -filetype=obj'
 alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
 alias clangll="clang -S -emit-llvm"
-alias reload_aliases=" . ~/.bash_aliases"
-alias cdc="cd ~/school"
-alias vi="vim"
+alias todo="task"
 #used for file transfer from local to server
 #stands for SSH Transfer File
 
@@ -49,7 +49,36 @@ share() {
     rsync -avzz "$NORMPATH" cattown:/mnt/.share/"$PATHNAME"
     echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
 }
+shared() {
+    NORMPATH=$(realpath -s "$1")
+    PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)-$(basename "$1")
+    rsync -avzz "$NORMPATH" cattown:/mnt/.share/"$PATHNAME"
+    echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
+    rm -rf "$NORMPATH"
+}
 
+
+sharetxt() {
+	PATHNAME=.$(head /dev/urandom -c 20| base64 | head - -c 20 | tr -d /)-$(echo "$1" | { read -a array ; echo ${array[0]} ; } )
+	touch ./"$PATHNAME"
+	echo "$@" > ./"$PATHNAME"
+    rsync -avzz ./"$PATHNAME" cattown:/mnt/.share/"$PATHNAME".txt
+	rm "$PATHNAME"
+    echo https://keltono.net/.share/$(rawurlencode "$PATHNAME").txt
+}
+
+store() {
+    rsync -avzz $1 cattown:/mnt/data/$2
+}
+
+stored() {
+    rsync -avzz $1 cattown:/mnt/data/$2
+    rm -rf $1
+}
+
+snag() {
+    rsync -avzzh cattown:/mnt/data/$1 $2
+}
 
 #self explanitory. downloads an mp3 from a youtube video. takes the url and then the name of the output file.
 youtube-mp3() {

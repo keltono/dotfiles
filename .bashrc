@@ -159,9 +159,6 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-export PATH="$PATH:/home/kelton/bin/VNC-Viewer"
-export PATH="$PATH:/home/kelton/.gem/ruby/2.6.0/bin"
-export PATH="$PATH:/home/kelton/.gem/ruby/2.5.0/bin"
 export PATH="$PATH:/home/kelton/bin/pycharm-2019.2.3/bin"
 export EDITOR="/usr/bin/vim"
 
@@ -172,6 +169,4 @@ export EDITOR="/usr/bin/vim"
 
 command xmodmap -e "keysym Alt_R = Multi_key" > /dev/null 2>&1
 
-eval `opam config env`
-
-PATH=$PATH:/usr/bin/icecat
+eval $(opam env)
