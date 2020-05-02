@@ -1,30 +1,63 @@
+"install vim plug if not already installed
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+"omni completetion
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'vim-syntastic/syntastic'
-Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-rhubarb'
-Plug 'vimwiki/vimwiki'
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-fugitive'
-Plug 'lervag/vimtex'
+"cool f/t highlighting
+Plug 'unblevable/quick-scope'    
+"colorscheme
 Plug 'nanotech/jellybeans.vim'
+"syntax checking
+Plug 'vim-syntastic/syntastic'
+"fish script
+Plug 'dag/vim-fish'
+"coq ide
+Plug 'whonore/coqtail'
+"requirement for coqtail
+Plug 'let-def/vimbufsync'
+"coq highlighting
+Plug 'jvoorhis/coq.vim'
+"fuzzy finding
+Plug 'junegunn/fzf.vim'
+"async build/commands
+Plug 'tpope/vim-dispatch'
+"commenting
+Plug 'tpope/vim-commentary'
+"general tweaks
+Plug 'tpope/vim-sensible'
+"git interface
+Plug 'tpope/vim-fugitive'
+"github fugative addon 
+Plug 'tpope/vim-rhubarb'
+"latex
+Plug 'lervag/vimtex'
+"tab autocompletion
 Plug 'ervandew/supertab'
-Plug 'dhruvasagar/vim-table-mode'
+"wiki files
+Plug 'vimwiki/vimwiki'
 
+Plug 'mhinz/vim-startify'
+
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': './install.sh'
+"     \ }
 call plug#end()
-"Custom changes!
+
+
+try
+colorscheme jellybeans
+catch
+endtry
+
 set visualbell
 
 "Statusline stuff
@@ -46,7 +79,10 @@ set statusline+=\ \ %{SyntasticStatuslineFlag()}
 set statusline+=\  
 
 
+"syntastic stuff
 let g:syntastic_ocaml_checkers = ['merlin']
+let g:syntastic_tex_checkers = ['']
+let g:syntastic_python_checkers = ['']
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -57,12 +93,15 @@ au FileType ocaml call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 set nu 
 highlight LineNr ctermfg=blue
 
-autocmd TextChanged <buffer> silent write 
+autocmd TextChanged *.* silent write 
 autocmd InsertLeave *.tex silent write 
 
 let g:table_mode_corner='+'
 
-"Leader = ','
+let g:vimwiki_list = [{'path': '~/.vimwiki/',
+                      \ 'syntax': 'default', 'ext': '.wiki'}]
+
+let mapleader = ","
 "fzf.vim keybindings
 nmap <Leader>f :GFiles<CR> 
 nmap <Leader>F :Files<CR>
@@ -78,29 +117,10 @@ nmap <Tab>p :tabp<CR>
 nmap <Tab>n :tabnew<CR>
 "fzf tabedit
 nmap <Tab>f :call fzf#run({'sink' : 'tabe', 'down' : '50%', 'options' : '-m' })<CR>
-"latex
-nmap <Leader>lp :Start! evince %:r.pdf<CR>
-nmap <Leader>lc <plug>(vimtex-clean)
-nmap <Leader>lC <plug>(vimtex-clean-full)
-nmap <Leader>lv <plug>(vimtex-view)
-nmap <Leader>ll :Start! pdflatex %<CR>
-nmap <Leader>lo :Start! pdflatex %<CR>
-nmap <Leader>le <plug>(vimtex-errors)
 
-"gcc curr file
+"make curr file
 nmap <Leader>m :Make<CR>
 
-"go to next error syntatsitc
-"
-
-
-autocmd FileType latex let b:dispatch = 'pdflatex %'
-
-au BufRead,BufNewFile *.txt set spell spelllang=en_us
-au BufRead,BufNewFile *.md set spell spelllang=en_us
-
-au BufRead,BufNewFile *.tex set spell spelllang=en_us
-au BufRead,BufNewFile *.bib set spell spelllang=en_us
 " Enable folding
 set foldmethod=indent
 set foldlevel=99 "fold with za
@@ -111,37 +131,12 @@ set complete+=k
 
 let g:vimtex_mappings_enabled = 0
 let g:javascript_plugin_flow = 1
-let g:spacegray_underline_search = 1
-let g:spacegray_use_italics = 1
 
 "vimtex config
 let g:vimtex_view_general_viewer = 'evince'
-"auto update mupdf on file save 
-"autocmd BufWritepost *.tex :!pkill -HUP mupdf
-"
-"
+
 set nocompatible
 filetype off
-
-
-" All of your Plugins must be added before the following line
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-
-
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Sets how many lines of history VIM has to remember
-set history=500
 
 " Enable filetype plugins
 filetype plugin on
@@ -150,15 +145,6 @@ filetype indent on
 " Set to auto read when a file is changed from the outside
 set autoread
 
-let mapleader = ","
- 
-": nmap <leader>w :w!<cr>
-
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set so=8
 
 let $LANG='en'
@@ -166,22 +152,9 @@ set langmenu=en
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
-" Turn on the Wild menu
-set wildmenu
-
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-set wildignore+=.git\*,.hg\*,.svn\*
-else
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
-
-"Always show current position
-set ruler
-
-" Height of the command bar
-set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -192,22 +165,16 @@ set whichwrap+=<,>,h,l
 
 " Ignore case when searching
 set ignorecase
-
 " When searching try to be smart about cases
 set smartcase
-
 " Highlight search results
 set hlsearch
-
 " Makes search act like search in modern browsers
 set incsearch
-
 " Don't redraw while executing macros (good performance config)
 set lazyredraw
-
 " For regular expressions turn magic on
 set magic
-
 " Show matching brackets when text indicator is over them
 set showmatch
 " How many tenths of a second to blink when matching brackets
@@ -218,65 +185,17 @@ set noerrorbells
 set t_vb=
 set tm=500
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-autocmd GUIEnter * set vb t_vb=
-endif
-
-
-" Add a bit extra margin to the left
-set foldcolumn=1
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable syntax highlighting
 syntax enable
 
-" Enable 256 colors palette in Gnome Terminal
-" if $COLORTERM == 'gnome-terminal'
-" set t_Co=256
-" endif
-
-try
-colorscheme jellybeans
-catch
-endtry
 
 set background=dark
-
-" Set extra options when running in GUI mode
-if has("gui_running")
-set guioptions-=T
-set guioptions-=e
-set t_Co=256
-set guitablabel=%M\ %t
-endif
-
-" Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
 
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
+" set nobackup
+" set nowb
 set noswapfile
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Be smart when using tabs ;)
-set smarttab
-
-" 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
 
@@ -289,18 +208,11 @@ set si "Smart indent
 set wrap "Wrap lines
 
 
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
 " Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
 map <c-space> ?
@@ -308,22 +220,8 @@ map <c-space> ?
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
-" Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-
-" Close the current buffer
-
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
-
-" Useful mappings for managing tabs
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -347,41 +245,26 @@ endtry
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remap VIM 0 to first non-blank character
+" Remap 0 to first non-blank character
 map 0 ^
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
-if has("mac") || has("macunix")
-nmap <D-j> <M-j>
-nmap <D-k> <M-k>
-vmap <D-j> <M-j>
-vmap <D-k> <M-k>
-endif
+" " Move a line of text using ALT+[jk] or Command+[jk] on mac
+" nmap <M-j> mz:m+<cr>`z
+" nmap <M-k> mz:m-2<cr>`z
+" vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+" vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Delete trailing white space on save, useful for some filetypes ;)
-fun! CleanExtraSpaces()
-let save_cursor = getpos(".")
-let old_query = getreg('/')
-silent! %s/\s\+$//e
-call setpos('.', save_cursor)
-call setreg('/', old_query)
-endfun
+" fun! CleanExtraSpaces()
+"     let save_cursor = getpos(".")
+"     let old_query = getreg('/')
+"     silent! %s/\s\+$//e
+"     call setpos('.', save_cursor)
+"     call setreg('/', old_query) endfun
+" endfun
 
-if has("autocmd")
-autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-endif
+" if has("autocmd")
+" autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh :call CleanExtraSpaces()
+" endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -443,8 +326,10 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-map <c-h> 1z=]s
-map <c-j> ]s
+nmap <c-h> 1z=]s
+nmap <c-j> ]s
+
+
 " ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
 let s:opam_share_dir = system("opam config var share")
 let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
@@ -489,3 +374,72 @@ nmap <Leader>n :lnext<CR>
 nmap <Leader>p :lprevious<CR>
 
 au! BufNewFile,BufRead QUESTIONS.txt setf vimwiki
+
+" toggle terminal
+let s:term_buf = 0
+let s:term_win = 0
+
+function! Term_toggle(height)
+    if win_gotoid(s:term_win)
+        hide
+    else
+        new terminal
+        exec "resize ".a:height
+        try
+            exec "buffer ".s:term_buf
+            exec "bd terminal"
+        catch
+            call termopen($SHELL, {"detach": 0})
+            let s:term_buf = bufnr("")
+            setlocal nocursorline " signcolumn=no
+        endtry
+        startinsert!
+        let s:term_win = win_getid()
+    endif
+endfunction
+
+nnoremap <silent><tab>t :call Term_toggle(15)<CR>
+tnoremap <silent><tab>t <C-\><C-n>:call Term_toggle(15)<CR>
+
+"latex
+nmap <Leader>lp :Start! evince %:r.pdf<CR>
+nmap <Leader>lc <plug>(vimtex-clean)
+nmap <Leader>lC <plug>(vimtex-clean-full)
+nmap <Leader>lv <plug>(vimtex-view)
+nmap <Leader>ll :Start! pdflatex %<CR>
+nmap <Leader>lo :Start! pdflatex %<CR>
+nmap <Leader>le <plug>(vimtex-errors)
+
+"coq
+autocmd FileType coq setlocal commentstring=(*%s*) tabstop=2 shiftwidth=2
+nnoremap <silent><leader>cS :CoqStart<CR>
+nnoremap <silent><leader>n :CoqNext<CR>
+nnoremap <silent><leader>u :CoqUndo<CR>
+nnoremap <silent><leader>cq :Coq (input('Query: '))<CR>
+nnoremap <silent><leader>cs :Coq SearchAbout (input('Search: '))<CR>
+autocmd FileType coq imap <C>n :call CoqNext()<CR>
+autocmd FileType coq imap <C>u :call CoqUndo()<CR>
+
+autocmd FileType latex let b:dispatch = 'pdflatex %'
+
+au BufRead,BufNewFile *.txt set spell spelllang=en_us
+au BufRead,BufNewFile *.md set spell spelllang=en_us
+
+au BufRead,BufNewFile *.tex set spell spelllang=en_us
+au BufRead,BufNewFile *.bib set spell spelllang=en_us
+
+set expandtab
+set tabstop=4
+
+let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper', '--lsp'] }
+let g:LanguageClient_rootMarkers = ['*.cabal', 'stack.yaml']
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
+map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
+map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
+map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
+map <Leader>lb :call LanguageClient#textDocument_references()<CR>
+map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
+map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
+" let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
