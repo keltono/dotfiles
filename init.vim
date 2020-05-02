@@ -4,12 +4,14 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+"omni completetion
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
 call plug#begin('~/.vim/plugged')
 
 Plug 'vim-syntastic/syntastic'
+Plug 'jvoorhis/coq.vim'
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-commentary'
@@ -47,10 +49,14 @@ set statusline+=\
 
 
 let g:syntastic_ocaml_checkers = ['merlin']
+let g:syntastic_tex_checkers = ['']
+let g:syntastic_python_checkers = ['']
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+
 
 au FileType ocaml call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 
@@ -81,14 +87,6 @@ nmap <Tab>p :tabp<CR>
 nmap <Tab>n :tabnew<CR>
 "fzf tabedit
 nmap <Tab>f :call fzf#run({'sink' : 'tabe', 'down' : '50%', 'options' : '-m' })<CR>
-"latex
-nmap <Leader>lp :Start! evince %:r.pdf<CR>
-nmap <Leader>lc <plug>(vimtex-clean)
-nmap <Leader>lC <plug>(vimtex-clean-full)
-nmap <Leader>lv <plug>(vimtex-view)
-nmap <Leader>ll :Start! pdflatex %<CR>
-nmap <Leader>lo :Start! pdflatex %<CR>
-nmap <Leader>le <plug>(vimtex-errors)
 
 "gcc curr file
 nmap <Leader>m :Make<CR>
@@ -97,13 +95,6 @@ nmap <Leader>m :Make<CR>
 "
 
 
-autocmd FileType latex let b:dispatch = 'pdflatex %'
-
-au BufRead,BufNewFile *.txt set spell spelllang=en_us
-au BufRead,BufNewFile *.md set spell spelllang=en_us
-
-au BufRead,BufNewFile *.tex set spell spelllang=en_us
-au BufRead,BufNewFile *.bib set spell spelllang=en_us
 " Enable folding
 set foldmethod=indent
 set foldlevel=99 "fold with za
@@ -276,9 +267,6 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Be smart when using tabs ;)
-set smarttab
-
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
@@ -517,6 +505,32 @@ function! Term_toggle(height)
 endfunction
 
 nnoremap <silent><tab>t :call Term_toggle(15)<CR>
-inoremap <silent><tab>t <ESC>:call Term_toggle(15)<CR>
 tnoremap <silent><tab>t <C-\><C-n>:call Term_toggle(15)<CR>
 
+"latex
+"this is broke for some reason...
+nmap <Leader>lp :Start! evince %:r.pdf<CR>
+nmap <Leader>lc <plug>(vimtex-clean)
+nmap <Leader>lC <plug>(vimtex-clean-full)
+nmap <Leader>lv <plug>(vimtex-view)
+nmap <Leader>ll :Start! pdflatex %<CR>
+nmap <Leader>lo :Start! pdflatex %<CR>
+nmap <Leader>le <plug>(vimtex-errors)
+
+"coq
+" nmap <Leader>cs :CoqStart<CR>
+" nmap <Leader>cn :CoqNext<CR>
+" nmap <Leader>cr :CoqRewind<CR>
+" nmap <Leader>cq :CoqQuit<CR>
+" nmap <Leader>cc :CoqToCursor<CR>
+" nmap <Leader>cu :CoqQuery<CR>
+
+
+
+autocmd FileType latex let b:dispatch = 'pdflatex %'
+
+au BufRead,BufNewFile *.txt set spell spelllang=en_us
+au BufRead,BufNewFile *.md set spell spelllang=en_us
+
+au BufRead,BufNewFile *.tex set spell spelllang=en_us
+au BufRead,BufNewFile *.bib set spell spelllang=en_us

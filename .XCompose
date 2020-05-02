@@ -90,13 +90,15 @@ include "%L"
 <Multi_key> <i> <f> <f> : "↔"
 <Multi_key> <n> <o> <r> : "↓"
 <Multi_key> <u> <q> : "∀" #Universal Quanitifier
+<Multi_key> <f> <a> : "∀" #ForAll
 <Multi_key> <e> <q> : "∃" #Existensial Qantifier. might replace b/c <e><q> sounds it should be for an equals.
-
-
+<Multi_key> <i> <n> : "∈" #IN
+<Multi_key> <s> <t> : "∋" #Such That
+<Multi_key> <t> <s> : "∈" #IN
+<Multi_key> <u> <n> : "⋃"
 ##other
 
 #em dash
-<Multi_key> <e> <m> <d> : "—"
 <Multi_key> <e> <m> <d> : "—"
 
 

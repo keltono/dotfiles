@@ -161,6 +161,7 @@ fi
 
 export PATH="$PATH:/home/kelton/bin/pycharm-2019.2.3/bin"
 export EDITOR="/usr/bin/vim"
+export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #  exec tmux

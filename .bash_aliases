@@ -1,11 +1,12 @@
-alias sl='ls' #typo preventance 
-alias l='ls' #typo preventance 
+alias sl='ls'
+alias l='ls'
+alias scheme='rlwrap scheme'
 alias py='python'
 alias rm='rm -I'
 alias cim='vim'
 alias v='vim'
 alias vi="vim"
-alias vim="nvim"
+# alias vim="nvim"
 alias vimrc="nvim ~/.config/nvim/init.vim"
 alias sudo='sudo '
 alias pv='feh -Fdrz --action9 "rm -f %F"'
@@ -22,8 +23,14 @@ alias llobj='llc -filetype=obj'
 alias llclean="ls | grep '\.'ll | xargs -I{} rm {}"
 alias clangll="clang -S -emit-llvm"
 alias todo="task"
-#used for file transfer from local to server
-#stands for SSH Transfer File
+
+gcap(){
+    git pull && git add -A && git commit -m "$1" && git push
+}
+gcp(){
+    git commit -m "$1" && git push
+}
+
 
 rawurlencode() {
   local string="${1}"
@@ -80,6 +87,17 @@ snag() {
     rsync -avzzh cattown:/mnt/data/$1 $2
 }
 
+sc() {
+    scrot -s /tmp/temp_screen_cap.png
+    PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)
+    rsync -avzz /tmp/temp_screen_cap.png cattown:/mnt/.share/screenshots/"$PATHNAME".png
+    u="https://keltono.net/.share/screenshots/$(rawurlencode "$PATHNAME").png"
+    echo $u
+    echo $u | xclip -selection c
+    # echo https://keltono.net/.share/screenshots/$(rawurlencode "$PATHNAME").png | xclip -selection c
+    rm -f /tmp/temp_screen_cap.png
+}
+
 #self explanitory. downloads an mp3 from a youtube video. takes the url and then the name of the output file.
 youtube-mp3() {
     youtube-dl -x --audio-format mp3 -o $2'.%(ext)s' $1
@@ -121,7 +139,6 @@ occ(){ #takes in inputfile and then an output file.
    rm temp1234.o
 }
 
-#Orsus Library Compiler
 
 #EVince Quit
 evq(){
@@ -129,3 +146,17 @@ evq(){
     disown -h %1 && exit
 }
 
+
+timeto(){
+    declare -i hours
+    declare -i mins
+    hours=10#$(date '+%H')
+    mins=10#$(date '+%M')
+    hours=$1-$hours
+    mins=$2-$mins
+    if (( mins < 0 )); then
+        mins=$mins+60
+        hours=$hours-1
+    fi
+    echo "time until "$1":"$2" is $hours hours and $mins mins"
+}

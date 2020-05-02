@@ -44,7 +44,8 @@ xterm -geometry 80x20+494-0 &
 exec xterm -geometry 80x66+0+0 -name login
 
 command xmodmap -e "keysym Alt_R = Multi_key"
+exec xmodmap -e "keysym Alt_R = Multi_key"
 
 exec syncthing &
 
-
+exec optimus-manager-qt &
