@@ -67,8 +67,10 @@ bindsym $mod+F5 exec terminal -e 'ranger'
 bindsym $mod+t exec --no-startup-id pkill compton
 bindsym $mod+Ctrl+t exec --no-startup-id compton -b
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
-bindsym Print exec --no-startup-id i3-scrot #screenshot
-bindsym Print+Shift exec sc #screenshot
+bindsym Print exec --no-startup i3-scrot -w i3-Pr#screenshot
+bindsym --release Shift+Print exec scrot -s 'screenshot_%Y%m%d_%H%M%S.png' -e 'mkdir -p ~/Pictures/screenshots && mv $f ~/Pictures/screenshots && xclip -selection clipboard -t image/png -i ~/Pictures/screenshots/`ls -1 -t ~/Pictures/screenshots | head -1`' # Area selection
+
+# bindsym Print+Shift exec sc #screenshot
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w #screencap
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+shift+Ctrl+h exec evince /usr/share/doc/manjaro/i3_help.pdf

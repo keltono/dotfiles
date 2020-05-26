@@ -196,8 +196,8 @@ set encoding=utf8
 set noswapfile
 
 
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 
 " Linebreak on 500 characters
 set lbr
