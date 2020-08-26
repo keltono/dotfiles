@@ -67,11 +67,12 @@ bindsym $mod+F5 exec terminal -e 'ranger'
 bindsym $mod+t exec --no-startup-id pkill compton
 bindsym $mod+Ctrl+t exec --no-startup-id compton -b
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
-bindsym Print exec --no-startup i3-scrot -w i3-Pr#screenshot
+bindsym --release Print exec scrot 'screenshot_%Y%m%d_%H%M%S.png' -e 'mkdir -p ~/Pictures/screenshots && mv $f ~/Pictures/screenshots && xclip -selection clipboard -t image/png -i ~/Pictures/screenshots/`ls -1 -t ~/Pictures/screenshots | head -1`' #
 bindsym --release Shift+Print exec scrot -s 'screenshot_%Y%m%d_%H%M%S.png' -e 'mkdir -p ~/Pictures/screenshots && mv $f ~/Pictures/screenshots && xclip -selection clipboard -t image/png -i ~/Pictures/screenshots/`ls -1 -t ~/Pictures/screenshots | head -1`' # Area selection
+# bindsym --release Shift+Print exec scrot -s 'screenshot_%Y%m%d_%H%M%S.png' -e 'mv $f ~/Pictures/screenshots && p=$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /) && rsync -avzz ~/Pictures/screenshots/`ls -1 -t ~/Pictures/screenshots | head -1` cattown:/mnt/share/screenshots/$p.png && echo https://keltono.net/.share/screenshots/$p.png | xclip -selection c '
 
 # bindsym Print+Shift exec sc #screenshot
-bindsym $mod+Print --release exec --no-startup-id i3-scrot -w #screencap
+# bindsym $mod+Print --release exec --no-startup-id i3-scrot -w #screencap
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+shift+Ctrl+h exec evince /usr/share/doc/manjaro/i3_help.pdf
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill

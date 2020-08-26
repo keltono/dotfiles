@@ -1,11 +1,12 @@
 alias sl='ls'
 alias l='ls'
 alias scheme='rlwrap scheme'
+alias cl='rlwrap sbcl'
 alias py='python'
 alias rm='rm -I'
-alias cim='vim'
-alias v='vim'
-alias vi="vim"
+alias cvim='vim'
+alias v='nvim'
+alias vi="nvim"
 # alias vim="nvim"
 alias vimrc="nvim ~/.config/nvim/init.vim"
 alias sudo='sudo '
@@ -65,6 +66,8 @@ shared() {
 }
 
 
+#should upgrade this to use the contents of my clipboard instead,
+#but then i would need to actually learn how xclip works
 sharetxt() {
 	PATHNAME=.$(head /dev/urandom -c 20| base64 | head - -c 20 | tr -d /)-$(echo "$1" | { read -a array ; echo ${array[0]} ; } )
 	touch ./"$PATHNAME"
@@ -87,8 +90,13 @@ snag() {
     rsync -avzzh cattown:/mnt/data/$1 $2
 }
 
+ssnag() { #fragile and bad but i really don't care
+  cd ~/spotify_recorder
+  perl spotify_snag.pl --uri "$1" --format flac --outdir .
+}
+
 sc() {
-    scrot -s /tmp/temp_screen_cap.png
+    maim -s /tmp/temp_screen_cap.png
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)
     rsync -avzz /tmp/temp_screen_cap.png cattown:/mnt/.share/screenshots/"$PATHNAME".png
     u="https://keltono.net/.share/screenshots/$(rawurlencode "$PATHNAME").png"

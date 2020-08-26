@@ -1,3 +1,5 @@
+let mapleader = ","
+
 "install vim plug if not already installed
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -7,24 +9,19 @@ endif
 
 "omni completetion
 filetype plugin on
+
 set omnifunc=syntaxcomplete#Complete
 
 call plug#begin('~/.vim/plugged')
 
 "cool f/t highlighting
-Plug 'unblevable/quick-scope'    
+Plug 'unblevable/quick-scope'
 "colorscheme
 Plug 'nanotech/jellybeans.vim'
 "syntax checking
 Plug 'vim-syntastic/syntastic'
 "fish script
 Plug 'dag/vim-fish'
-"coq ide
-Plug 'whonore/coqtail'
-"requirement for coqtail
-Plug 'let-def/vimbufsync'
-"coq highlighting
-Plug 'jvoorhis/coq.vim'
 "fuzzy finding
 Plug 'junegunn/fzf.vim'
 "async build/commands
@@ -35,7 +32,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 "git interface
 Plug 'tpope/vim-fugitive'
-"github fugative addon 
+"github fugative addon
 Plug 'tpope/vim-rhubarb'
 "latex
 Plug 'lervag/vimtex'
@@ -43,15 +40,27 @@ Plug 'lervag/vimtex'
 Plug 'ervandew/supertab'
 "wiki files
 Plug 'vimwiki/vimwiki'
-
+"Idris2
+Plug 'edwinb/idris2-vim'
+"Custom start menu
 Plug 'mhinz/vim-startify'
-
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': './install.sh'
-"     \ }
+"LSP
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': './install.sh'
+    \ }
 call plug#end()
 
+set hidden
+"NLSP
+au FileType haskell call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+set rtp+=~/.vim/pack/XXX/start/LanguageClient-neovim
+let g:LanguageClient_serverCommands = { 'haskell': ['haskell-language-server-wrapper', '--lsp'] }
+nmap <F5> <Plug>(lcn-menu)
+nmap <silent>K <Plug>(lcn-hover)
+nmap <silent> gd <Plug>(lcn-definition)
+nmap <silent> <F2> <Plug>(lcn-rename)
+nmap <silent> Q <Plug>(lcn-type-definition)
 
 try
 colorscheme jellybeans
@@ -60,29 +69,28 @@ endtry
 
 set visualbell
 
-"Statusline stuff
 " Always show the status line
 set laststatus=2
 
+"Custon statusline
 set statusline+=%#PmenuSel#
 set statusline+=%{FugitiveStatusline()}
 set statusline+=%#Normal#
-set statusline+=\ %r%{getcwd()}%h\  
-set statusline+=%m\  
+set statusline+=\ %r%{getcwd()}%h\
+set statusline+=%m\
 set statusline+=%=
 set statusline+=%#CursorColumn#
 set statusline+=\ %y
 set statusline+=\[%{&fileformat}\]
-set statusline+=\ L%l:C%c 
+set statusline+=\ L%l:C%c
 set statusline+=%#warningmsg#
 set statusline+=\ \ %{SyntasticStatuslineFlag()}
-set statusline+=\  
-
+set statusline+=\
 
 "syntastic stuff
 let g:syntastic_ocaml_checkers = ['merlin']
 let g:syntastic_tex_checkers = ['']
-let g:syntastic_python_checkers = ['']
+let g:syntastic_python_checkers = ['pylint']
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -90,20 +98,19 @@ let g:syntastic_check_on_wq = 0
 
 au FileType ocaml call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 
-set nu 
+set nu
 highlight LineNr ctermfg=blue
 
-autocmd TextChanged *.* silent write 
-autocmd InsertLeave *.tex silent write 
+autocmd TextChanged *.* silent write
+autocmd InsertLeave *.tex silent write
 
 let g:table_mode_corner='+'
 
 let g:vimwiki_list = [{'path': '~/.vimwiki/',
                       \ 'syntax': 'default', 'ext': '.wiki'}]
 
-let mapleader = ","
 "fzf.vim keybindings
-nmap <Leader>f :GFiles<CR> 
+nmap <Leader>f :GFiles<CR>
 nmap <Leader>F :Files<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>h :History<CR>
@@ -119,7 +126,7 @@ nmap <Tab>n :tabnew<CR>
 nmap <Tab>f :call fzf#run({'sink' : 'tabe', 'down' : '50%', 'options' : '-m' })<CR>
 
 "make curr file
-nmap <Leader>m :Make<CR>
+" nmap <Leader>m :Make<CR>
 
 " Enable folding
 set foldmethod=indent
@@ -363,10 +370,10 @@ for tool in s:opam_packages
 endfor
 " ## end of OPAM user-setup addition for vim / base ## keep this line
 
-nmap <Leader>t :MerlinTypeOf<CR>
-"creates a pattern match based on the type being matched
-nmap <Leader>md :MerlinDestruct<CR>
-nmap <Leader>doc :MerlinDocument<CR>
+"nmap <Leader>t :MerlinTypeOf<CR>
+""creates a pattern match based on the type being matched
+"nmap <Leader>md :MerlinDestruct<CR>
+"nmap <Leader>doc :MerlinDocument<CR>
 
 set rtp+=/home/kelton/.opam/default/share/merlin/vim
 
@@ -402,23 +409,14 @@ nnoremap <silent><tab>t :call Term_toggle(15)<CR>
 tnoremap <silent><tab>t <C-\><C-n>:call Term_toggle(15)<CR>
 
 "latex
+let g:tex_flavor = 'latex'
 nmap <Leader>lp :Start! evince %:r.pdf<CR>
 nmap <Leader>lc <plug>(vimtex-clean)
 nmap <Leader>lC <plug>(vimtex-clean-full)
 nmap <Leader>lv <plug>(vimtex-view)
-nmap <Leader>ll :Start! pdflatex %<CR>
+nmap <Leader>ll :Start! pdflatex -shell-escape %<CR>
 nmap <Leader>lo :Start! pdflatex %<CR>
 nmap <Leader>le <plug>(vimtex-errors)
-
-"coq
-autocmd FileType coq setlocal commentstring=(*%s*) tabstop=2 shiftwidth=2
-nnoremap <silent><leader>cS :CoqStart<CR>
-nnoremap <silent><leader>n :CoqNext<CR>
-nnoremap <silent><leader>u :CoqUndo<CR>
-nnoremap <silent><leader>cq :Coq (input('Query: '))<CR>
-nnoremap <silent><leader>cs :Coq SearchAbout (input('Search: '))<CR>
-autocmd FileType coq imap <C>n :call CoqNext()<CR>
-autocmd FileType coq imap <C>u :call CoqUndo()<CR>
 
 autocmd FileType latex let b:dispatch = 'pdflatex %'
 
@@ -431,15 +429,17 @@ au BufRead,BufNewFile *.bib set spell spelllang=en_us
 set expandtab
 set tabstop=4
 
-let g:LanguageClient_serverCommands = { 'haskell': ['hie-wrapper', '--lsp'] }
-let g:LanguageClient_rootMarkers = ['*.cabal', 'stack.yaml']
+au VimEnter * syntax keyword Statement lambda conceal cchar=λ
+au VimEnter * hi! link Conceal Statement
+au VimEnter * set conceallevel=2
 
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-map <Leader>lk :call LanguageClient#textDocument_hover()<CR>
-map <Leader>lg :call LanguageClient#textDocument_definition()<CR>
-map <Leader>lr :call LanguageClient#textDocument_rename()<CR>
-map <Leader>lf :call LanguageClient#textDocument_formatting()<CR>
-map <Leader>lb :call LanguageClient#textDocument_references()<CR>
-map <Leader>la :call LanguageClient#textDocument_codeAction()<CR>
-map <Leader>ls :call LanguageClient#textDocument_documentSymbol()<CR>
-" let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+"trailing whitespace
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    keepp %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+filetype plugin indent on

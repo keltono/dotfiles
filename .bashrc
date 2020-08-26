@@ -162,6 +162,7 @@ fi
 export PATH="$PATH:/home/kelton/bin/pycharm-2019.2.3/bin"
 export EDITOR="/usr/bin/vim"
 export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.7.0/bin:$PATH"
 
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
 #  exec tmux
@@ -171,3 +172,7 @@ export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 command xmodmap -e "keysym Alt_R = Multi_key" > /dev/null 2>&1
 
 eval $(opam env)
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
