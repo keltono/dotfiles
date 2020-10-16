@@ -30,8 +30,6 @@ Plug 'lervag/vimtex'
 Plug 'tpope/vim-dispatch'
 "LSP
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-" tab for completion
-" Plug 'ervandew/supertab'
 call plug#end()
 
 " let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -49,7 +47,32 @@ au TabLeave * let g:lasttab = tabpagenr()
 
 "latex
 let g:tex_flavor = "latex"
+let g:vimtex_compiler_method = "tectonic"
+"TODO look into mupdf/etc viewer vimtex integration
+let g:vimtex_view_general_viewer= "evince"
+let g:vimtex_context_pdf_viewer= "evince"
+let g:vimtex_compiler_tectonic = {
+  \ 'build_dir' : '',
+  \ 'options' : [
+  \   '--keep-logs',
+  \   '--synctex'
+  \ ],
+  \}
 
+autocmd FileType tex nmap <leader>c  <plug>(vimtex-compile)
+autocmd FileType tex nmap <leader>o  <plug>(vimtex-compile-output)
+autocmd FileType tex nmap <leader>p  <plug>(vimtex-view)
+autocmd FileType tex nmap <leader>s  <plug>(vimtex-status)
+autocmd FileType tex nmap <leader>e  <plug>(vimtex-errors)
+autocmd FileType tex nmap <leader>m  <plug>(vimtex-context-menu)
+autocmd FileType tex nmap <leader>t  <plug>(vimtex-toc-toggle)
+
+autocmd InsertLeave *.tex silent write 
+autocmd TextChanged *.tex silent write 
+
+" autocmd FileType * exec("setlocal dictionary+=/home/kelton/.vim/dictionaries/".expand('<amatch>'))
+au BufRead,BufNewFile *.tex set spell spelllang=en_us
+au BufRead,BufNewFile *.bib set spell spelllang=en_us
 "colour scheme
 try
     colorscheme gruvbox
@@ -136,7 +159,9 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " Always show the status line
 set laststatus=2
 " Format the status line
-set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c 
+set statusline=\ %F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+set statusline+=%=
+set statusline+=%y
 " Delete trailing white space on save
 fun! CleanExtraSpaces()
     let save_cursor = getpos(".")
