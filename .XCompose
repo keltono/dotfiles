@@ -89,7 +89,7 @@ include "%L"
 <Multi_key> <i> <f> : "→" #maybe have an l before the logic ones? if it becomes an issue i guess.
 <Multi_key> <i> <f> <f> : "↔"
 <Multi_key> <n> <o> <r> : "↓"
-<Multi_key> <i> <n> : "∈" 
+<Multi_key> <i> <n> : "∈" #IN
 <Multi_key> <u> <q> : "∀" #Universal Quanitifier
 <Multi_key> <e> <q> : "∃" #Existensial Qantifier. might replace b/c <e><q> sounds it should be for an equals.
 <Multi_key> <u> <n> : "∪" #UNion

@@ -30,7 +30,13 @@ Plug 'lervag/vimtex'
 Plug 'tpope/vim-dispatch'
 "LSP
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+"rainbow parens
+Plug 'luochen1990/rainbow'
+"nix syntax highlighting
+Plug 'LnL7/vim-nix'
 call plug#end()
+
+let g:rainbow_active = 1
 
 " let g:SuperTabDefaultCompletionType = "<c-n>"
 "tab manipulation
@@ -47,17 +53,17 @@ au TabLeave * let g:lasttab = tabpagenr()
 
 "latex
 let g:tex_flavor = "latex"
-let g:vimtex_compiler_method = "tectonic"
+let g:vimtex_compiler_method = "latexmk"
 "TODO look into mupdf/etc viewer vimtex integration
 let g:vimtex_view_general_viewer= "evince"
 let g:vimtex_context_pdf_viewer= "evince"
-let g:vimtex_compiler_tectonic = {
-  \ 'build_dir' : '',
-  \ 'options' : [
-  \   '--keep-logs',
-  \   '--synctex'
-  \ ],
-  \}
+" let g:vimtex_compiler_tectonic = {
+"   \ 'build_dir' : '',
+"   \ 'options' : [
+"   \   '--keep-logs',
+"   \   '--synctex'
+"   \ ],
+"   \}
 
 autocmd FileType tex nmap <leader>c  <plug>(vimtex-compile)
 autocmd FileType tex nmap <leader>o  <plug>(vimtex-compile-output)
@@ -67,8 +73,8 @@ autocmd FileType tex nmap <leader>e  <plug>(vimtex-errors)
 autocmd FileType tex nmap <leader>m  <plug>(vimtex-context-menu)
 autocmd FileType tex nmap <leader>t  <plug>(vimtex-toc-toggle)
 
-autocmd InsertLeave *.tex silent write 
-autocmd TextChanged *.tex silent write 
+" autocmd InsertLeave *.tex silent write 
+" autocmd TextChanged *.tex silent write 
 
 " autocmd FileType * exec("setlocal dictionary+=/home/kelton/.vim/dictionaries/".expand('<amatch>'))
 au BufRead,BufNewFile *.tex set spell spelllang=en_us
@@ -95,9 +101,8 @@ set norelativenumber
 set expandtab
 " enable smarts
 set smarttab
-" 1 tab == 2 spaces
-set shiftwidth=2
-set tabstop=2
+set shiftwidth=4
+set tabstop=4
 " Linebreak on 500 characters
 set lbr
 set tw=500
@@ -106,6 +111,7 @@ set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
 set history=500
+set hls "highlight search results
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -199,8 +205,22 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
+
+" Use K to show documentation in preview window.
+nmap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+au FileType vimwiki :RainbowToggleOff
+" fuck perl
+au BufRead,BufNewFile *.pl            set filetype=prolog
