@@ -28,17 +28,24 @@ Plug 'neovimhaskell/haskell-vim'
 Plug 'lervag/vimtex'
 "Async commands
 Plug 'tpope/vim-dispatch'
-"LSP
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 "rainbow parens
 Plug 'luochen1990/rainbow'
 "nix syntax highlighting
 Plug 'LnL7/vim-nix'
+"LSP
+Plug 'neovim/nvim-lspconfig'
+"tab autocmpletion
+Plug 'ervandew/supertab'
+"agda support
+Plug 'derekelkins/agda-vim'
+"filetree
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+
+
 call plug#end()
 
 let g:rainbow_active = 1
 
-" let g:SuperTabDefaultCompletionType = "<c-n>"
 "tab manipulation
 nmap <Tab><Tab> :tabn<CR>
 nmap <Tab>q :q<CR>
@@ -54,16 +61,8 @@ au TabLeave * let g:lasttab = tabpagenr()
 "latex
 let g:tex_flavor = "latex"
 let g:vimtex_compiler_method = "latexmk"
-"TODO look into mupdf/etc viewer vimtex integration
 let g:vimtex_view_general_viewer= "evince"
 let g:vimtex_context_pdf_viewer= "evince"
-" let g:vimtex_compiler_tectonic = {
-"   \ 'build_dir' : '',
-"   \ 'options' : [
-"   \   '--keep-logs',
-"   \   '--synctex'
-"   \ ],
-"   \}
 
 autocmd FileType tex nmap <leader>c  <plug>(vimtex-compile)
 autocmd FileType tex nmap <leader>o  <plug>(vimtex-compile-output)
@@ -94,6 +93,8 @@ filetype plugin on
 filetype indent on
 "Syntax highlighting
 syntax enable
+"omnicomplete
+set omnifunc=syntaxcomplete#Complete
 "absolute line numbers
 set number
 set norelativenumber
@@ -185,42 +186,50 @@ map <leader>ss :setlocal spell!<cr>
 map <leader>sn ]s
 map <leader>sp [s
 
-"coc.nvim
-"tab completion
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-" Use K to show documentation in preview window.
-nmap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
 
 au FileType vimwiki :RainbowToggleOff
 " fuck perl
 au BufRead,BufNewFile *.pl            set filetype=prolog
+
+"lsp options
+" LSP Configs
+lua << EOF
+    local nvim_lsp = require('lspconfig')
+    local on_attach = function(client, bufNumber)
+      vim.api.nvim_buf_set_option(bufNumber, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+      local function buf_set_keymap(...)
+        vim.api.nvim_buf_set_keymap(bufNumber, ...)
+      end
+
+      local opts = { noremap=true, silent=true }
+      buf_set_keymap('n', '<leader>qf', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+      buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+      buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+      buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+      buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+      buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+
+      if client.resolved_capabilities.document_highlight then
+        vim.api.nvim_exec([[
+          hi LspReferenceRead cterm=bold ctermbg=yellow guibg=LightYellow
+          hi LspReferenceText cterm=bold ctermbg=yellow guibg=LightYellow
+          hi LspReferenceWrite cterm=bold ctermbg=yellow guibg=LightYellow
+          augroup lsp_document_highlight
+            autocmd!
+            autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+            autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+          augroup END
+        ]], false)
+      end
+    end
+
+    for _, lsp in ipairs({'hls', 'pyright', 'jdtls', 'rust_analyzer', 'ccls' }) do
+      nvim_lsp[lsp].setup({ on_attach = on_attach })
+    end
+EOF
+au FileType * call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+
+"chad
+nnoremap <leader>v <cmd>CHADopen<cr>
+nnoremap <leader>l <cmd>call setqflist([])<cr>

@@ -65,12 +65,12 @@ rawurlencode() {
 
 share() {
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)-$(basename "$1")
-    rsync -avzz $1 cattown:/mnt/.share/"$PATHNAME"
+    rsync -avzz -P $1 cattown:/mnt/.share/"$PATHNAME"
     echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
 }
 shared() {
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)-$(basename "$1")
-    rsync -avzz "$NORMPATH" cattown:/mnt/.share/"$PATHNAME"
+    rsync -avzz -P "$NORMPATH" cattown:/mnt/.share/"$PATHNAME"
     echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
     rm -rf $1
 }
@@ -80,29 +80,29 @@ sharetxt() {
 	PATHNAME=.$(head /dev/urandom -c 20| base64 | head - -c 20 | tr -d /)-$(echo "$1" | { read -a array ; echo ${array[0]} ; } )
 	touch ./"$PATHNAME"
 	echo "$@" > ./"$PATHNAME"
-    rsync -avzz ./"$PATHNAME" cattown:/mnt/.share/"$PATHNAME".txt
+    rsync -avzz  -P ./"$PATHNAME" cattown:/mnt/.share/"$PATHNAME".txt
 	rm "$PATHNAME"
     echo https://keltono.net/.share/$(rawurlencode "$PATHNAME").txt
 }
 
 store() {
-    rsync -avzz $1 cattown:/mnt/data/$2
+    rsync -avzz -P $1 cattown:/mnt/data/$2
 }
 
 
 stored() {
-    rsync -avzz $1 cattown:/mnt/data/$2
+    rsync -avzz -P $1 cattown:/mnt/data/$2
     rm -rf $1
 }
 
 snag() {
-    rsync -avzzh cattown:/mnt/data/$1 $2
+    rsync -avzzh -P cattown:/mnt/data/$1 $2
 }
 
 sc() {
     maim -s /tmp/temp_screen_cap.png
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)
-    rsync -avzz /tmp/temp_screen_cap.png cattown:/mnt/.share/screenshots/"$PATHNAME".png
+    rsync -avzz -P /tmp/temp_screen_cap.png cattown:/mnt/.share/screenshots/"$PATHNAME".png
     u="https://keltono.net/.share/screenshots/$(rawurlencode "$PATHNAME").png"
     echo $u
     echo $u | xclip -selection c
@@ -160,3 +160,7 @@ there(){
   nohup alacritty -e bash --rcfile <(echo '. ~/.bashrc; ' cd $cur)  &>/dev/null  &
 }
 
+uz(){
+    unzip *.zip
+    rm *.zip
+}

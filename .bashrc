@@ -174,5 +174,16 @@ eval `opam config env`
 # export PYENV_ROOT="$HOME/.pyenv"
 # export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+#configure z
 [[ -r "/usr/share/z/z.sh" ]] && source /usr/share/z/z.sh
+#configure nix
 . /home/kelton/.nix-profile/etc/profile.d/nix.sh
+
+#configure jdtls
+export JAR=/usr/share/java/jdtls/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
+export JAVA_HOME=/usr/lib/jvm/default
+export JDTLS_CONFIG=/usr/share/java/jdtls/config_linux
+export WORKSPACE=$HOME/.workspace
+#note to self: i also needed to reset the permisions for the /usr/share/java/jdtls folder
+
