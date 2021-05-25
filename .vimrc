@@ -72,6 +72,7 @@ autocmd FileType tex nmap <leader>e  <plug>(vimtex-errors)
 autocmd FileType tex nmap <leader>m  <plug>(vimtex-context-menu)
 autocmd FileType tex nmap <leader>t  <plug>(vimtex-toc-toggle)
 
+autocmd FileType tex nnoremap <F3> :w !detex \| wc -w<CR>
 " autocmd InsertLeave *.tex silent write 
 " autocmd TextChanged *.tex silent write 
 

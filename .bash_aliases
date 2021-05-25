@@ -164,3 +164,8 @@ uz(){
     unzip *.zip
     rm *.zip
 }
+muz(){
+    mv "$1" .
+    unzip *.zip
+    rm *.zip
+}
