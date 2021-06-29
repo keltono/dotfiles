@@ -2,7 +2,6 @@
 alias py='python'
 alias rm='rm -I'
 alias cim='nvim'
-alias v='nvim'
 alias vi="nvim"
 alias vim="nvim"
 alias sudo='sudo '
@@ -20,10 +19,12 @@ alias todo="vim ~/vimwiki/todos.wiki"
 alias sched="vim ~/vimwiki/schedule.wiki"
 alias mdkir="mkdir"
 alias scheme="rlwrap scheme"
-alias pv='sudo feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
+alias pvs='sudo feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
+alias pv='feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
 alias gchi='ghci'
 alias c='clear'
 alias cal='cal -m'
+alias gcal='cal'
 
 
 catt(){
@@ -168,4 +169,8 @@ muz(){
     mv "$1" .
     unzip *.zip
     rm *.zip
+}
+cdir(){
+    mkdir $1
+    cd $1
 }
