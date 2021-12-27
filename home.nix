@@ -37,5 +37,13 @@
     pkgs.haskellPackages.ghcup
     pkgs.fasd
     pkgs.mumble
+    pkgs.nix-prefetch-git
+    pkgs.cabal2nix
+    pkgs.haskellPackages.alex
+    pkgs.haskellPackages.happy
+    pkgs.youtube-dl
+    pkgs.mpv
+    pkgs.android-studio
+    pkgs.android-tools
   ];
 }
