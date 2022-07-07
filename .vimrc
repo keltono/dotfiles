@@ -17,6 +17,7 @@ call plug#begin('~/.vim/plugged')
 "colourscheme
 Plug 'morhetz/gruvbox'
 "fuzzy search
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 "easy commenting
 Plug 'tpope/vim-commentary'
@@ -38,11 +39,10 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'ervandew/supertab'
 "agda support
 Plug 'derekelkins/agda-vim'
-"filetree
-Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
-
-
+Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
+
+
 
 let g:rainbow_active = 1
 
@@ -60,7 +60,7 @@ au TabLeave * let g:lasttab = tabpagenr()
 
 "latex
 let g:tex_flavor = "latex"
-let g:vimtex_compiler_method = "latexmk"
+let g:vimtex_compiler_method = "tectonic"
 let g:vimtex_view_general_viewer= "evince"
 let g:vimtex_context_pdf_viewer= "evince"
 
@@ -187,6 +187,12 @@ map <leader>ss :setlocal spell!<cr>
 map <leader>sn ]s
 map <leader>sp [s
 
+" treestuff
+let g:nvim_tree_indent_markers = 1 "0 by default, this option shows indent markers when folders are open
+let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
 
 au FileType vimwiki :RainbowToggleOff
 " fuck perl
@@ -195,6 +201,7 @@ au BufRead,BufNewFile *.pl            set filetype=prolog
 "lsp options
 " LSP Configs
 lua << EOF
+    require('nvim-tree').setup()
     local nvim_lsp = require('lspconfig')
     local on_attach = function(client, bufNumber)
       vim.api.nvim_buf_set_option(bufNumber, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -231,6 +238,3 @@ lua << EOF
 EOF
 au FileType * call SuperTabSetDefaultCompletionType("<c-x><c-o>")
 
-"chad
-nnoremap <leader>v <cmd>CHADopen<cr>
-nnoremap <leader>l <cmd>call setqflist([])<cr>

@@ -23,8 +23,6 @@ alias pvs='sudo feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
 alias pv='feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
 alias gchi='ghci'
 alias c='clear'
-alias cal='cal -m'
-alias gcal='cal'
 
 
 catt(){
@@ -66,14 +64,13 @@ rawurlencode() {
 
 share() {
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)-$(basename "$1")
-    rsync -avzz -P $1 cattown:/mnt/.share/"$PATHNAME"
+    rsync -avzz -P $1 keltono.net:/mnt/.share/"$PATHNAME"
     echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
 }
 shared() {
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)-$(basename "$1")
-    rsync -avzz -P "$NORMPATH" cattown:/mnt/.share/"$PATHNAME"
+    rsync -avzz -P "$NORMPATH" cattown:/mnt/.share/"$PATHNAME" && rm -rf $1
     echo https://keltono.net/.share/$(rawurlencode "$PATHNAME")
-    rm -rf $1
 }
 
 
@@ -87,28 +84,32 @@ sharetxt() {
 }
 
 store() {
-    rsync -avzz -P $1 cattown:/mnt/data/$2
+    rsync -avzz -P $1 keltono.net:/mnt/data/$2
 }
 
 
 stored() {
-    rsync -avzz -P $1 cattown:/mnt/data/$2
+    rsync -avzz -P $1 keltono.net:/mnt/data/$2
     rm -rf $1
 }
 
 snag() {
-    rsync -avzzh -P cattown:/mnt/data/$1 $2
+    rsync -avzzh -P keltono.net:/mnt/data/$1 $2
 }
 
 sc() {
     maim -s /tmp/temp_screen_cap.png
     PATHNAME=.$(head /dev/urandom -c 20 | base64 | head - -c 20 | tr -d /)
-    rsync -avzz -P /tmp/temp_screen_cap.png cattown:/mnt/.share/screenshots/"$PATHNAME".png
+    rsync -avzz -P /tmp/temp_screen_cap.png keltono.net:/mnt/.share/screenshots/"$PATHNAME".png
     u="https://keltono.net/.share/screenshots/$(rawurlencode "$PATHNAME").png"
     echo $u
     echo $u | xclip -selection c
-    # echo https://keltono.net/.share/screenshots/$(rawurlencode "$PATHNAME").png | xclip -selection c
     rm -f /tmp/temp_screen_cap.png
+}
+
+scc() {
+    maim -s /tmp/temp_screen_cap.png
+    xclip -sel clip -t image/png < /tmp/temp_screen_cap.png 
 }
 
 cloc-git(){
