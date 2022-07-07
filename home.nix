@@ -37,14 +37,17 @@
     pkgs.fasd
     pkgs.mumble
     pkgs.fzf
-    pkgs.opam
     pkgs.foma
     pkgs.nodePackages.pyright
     pkgs.tectonic
     pkgs.graphviz
-    pkgs.haskell.compiler.ghcjs
-    pkgs.ghcid
     pkgs.wasm-pack
     pkgs.rust-analyzer
+    pkgs.nix-prefetch-git
+    pkgs.cabal2nix
+    pkgs.haskellPackages.alex
+    pkgs.haskellPackages.happy
+    pkgs.youtube-dl
+    pkgs.mpv
   ];
 }
