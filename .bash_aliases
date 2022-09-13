@@ -19,10 +19,16 @@ alias todo="vim ~/vimwiki/todos.wiki"
 alias sched="vim ~/vimwiki/schedule.wiki"
 alias mdkir="mkdir"
 alias scheme="rlwrap scheme"
-alias pvs='sudo feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
-alias pv='feh --action1 "mv %f ./best"  --action9 "rm %f" -zdZFr  .'
+alias pvs='sudo feh --action1 "mv %f ./best/"  --action9 "rm %f" -zdZFr  .'
+alias pv='feh --action1 "mv %f ./best/"  --action9 "rm %f" -zdZFr  .'
 alias gchi='ghci'
 alias c='clear'
+alias pvm='/home/kelton/cmu/phosphor/jre-inst/bin/java -javaagent:/home/kelton/cmu/sort-benchmarks/jars/phosphor-jigsaw-javaagent-0.1.0-SNAPSHOT.jar'
+alias phome='export JAVA_HOME=/home/kelton/cmu/phosphor/jre-inst'
+alias pmvnopts='export MAVEN_OPTS=-javaagent:/home/kelton/cmu/sort-benchmarks/jars/phosphor-jigsaw-javaagent-0.1.0-SNAPSHOT.jar'
+alias pinstr='java -jar /home/kelton/cmu/sort-benchmarks/jars/Phosphor-0.1.0-SNAPSHOT.jar'
+alias intellij="/home/kelton/cmu/idea-IU-221.5591.52/bin/idea.sh"
+alias phosphorDriver="/home/kelton/cmu/phosphor/jre-inst/bin/java -javaagent:/home/kelton/cmu/sort-benchmarks/jars/phosphor-jigsaw-javaagent-0.1.0-SNAPSHOT.jar -cp .:/home/kelton/.m2/repository/edu/columbia/cs/psl/phosphor/Phosphor/0.1.0-SNAPSHOT/Phosphor-0.1.0-SNAPSHOT.jar:$(~/cmu/jqf/scripts/classpath.sh) phosphor.PhosphorTestDriver"
 
 
 catt(){
