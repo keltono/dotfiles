@@ -38,11 +38,9 @@ Plug 'neovim/nvim-lspconfig'
 "tab autocmpletion
 Plug 'ervandew/supertab'
 "agda support
-Plug 'derekelkins/agda-vim'
+
 Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
-
-
 
 let g:rainbow_active = 1
 
@@ -61,8 +59,7 @@ au TabLeave * let g:lasttab = tabpagenr()
 "latex
 let g:tex_flavor = "latex"
 let g:vimtex_compiler_method = "tectonic"
-let g:vimtex_view_general_viewer= "evince"
-let g:vimtex_context_pdf_viewer= "evince"
+let g:vimtex_view_method = 'zathura'
 
 autocmd FileType tex nmap <leader>c  <plug>(vimtex-compile)
 autocmd FileType tex nmap <leader>o  <plug>(vimtex-compile-output)
@@ -235,6 +232,22 @@ lua << EOF
     for _, lsp in ipairs({'hls', 'pyright', 'jdtls', 'rust_analyzer', 'ccls' }) do
       nvim_lsp[lsp].setup({ on_attach = on_attach })
     end
+    require('lspconfig').rust_analyzer.setup {
+      -- Other Configs ...
+      settings = {
+        ["rust-analyzer"] = {
+          -- Other Settings ...
+          procMacro = {
+            ignored = {
+                leptos_macro = {
+                    -- optional: --
+                    -- "component",
+                    "server",
+                },
+            },
+          },
+        },
+      }
+    }
 EOF
 au FileType * call SuperTabSetDefaultCompletionType("<c-x><c-o>")
-
