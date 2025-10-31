@@ -1,17 +1,6 @@
-set shell=/bin/bash
+set shell=/run/current-system/sw/bin/bash
 let mapleader = ","
-"Download vimplug on new install & install all plugins
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
-  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
+"
 "Plugins
 call plug#begin('~/.vim/plugged')
 "colourscheme
@@ -35,9 +24,18 @@ Plug 'luochen1990/rainbow'
 Plug 'LnL7/vim-nix'
 "LSP
 Plug 'neovim/nvim-lspconfig'
+"Rust
+Plug 'mrcjkb/rustaceanvim'
+Plug 'hrsh7th/cmp-nvim-lsp'
+"completion
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+
 "tab autocmpletion
-Plug 'ervandew/supertab'
-"agda support
+" Plug 'ervandew/supertab'
 
 Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
@@ -76,11 +74,14 @@ autocmd FileType tex nnoremap <F3> :w !detex \| wc -w<CR>
 " autocmd FileType * exec("setlocal dictionary+=/home/kelton/.vim/dictionaries/".expand('<amatch>'))
 au BufRead,BufNewFile *.tex set spell spelllang=en_us
 au BufRead,BufNewFile *.bib set spell spelllang=en_us
+au BufRead,BufNewFile *.mlw set filetype=why3
 "colour scheme
 try
     colorscheme gruvbox
 catch
 endtry
+
+"set background=light   " Setting light mode
 
 "essentials
 "bells
@@ -100,12 +101,13 @@ set norelativenumber
 set expandtab
 " enable smarts
 set smarttab
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 " Linebreak on 500 characters
 set lbr
 set tw=500
 
+set undofile
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
@@ -195,9 +197,66 @@ au FileType vimwiki :RainbowToggleOff
 " fuck perl
 au BufRead,BufNewFile *.pl            set filetype=prolog
 
+"require('lspconfig').rust_analyzer.setup {
+"  -- Other Configs ...
+    "  settings = {
+    "    ["rust-analyzer"] = {
+    "      -- Other Settings ...
+    "      procMacro = {
+    "        ignored = {
+    "            leptos_macro = {
+    "                -- optional: --
+    "                -- "component",
+    "                "server",
+    "            },
+    "        },
+    "      },
+    "    },
+    "  }
+
+      " if client.resolved_capabilities.document_highlight then
+      "   vim.api.nvim_exec([[
+      "     hi LspReferenceRead cterm=bold ctermbg=yellow guibg=LightYellow
+      "     hi LspReferenceText cterm=bold ctermbg=yellow guibg=LightYellow
+      "     hi LspReferenceWrite cterm=bold ctermbg=yellow guibg=LightYellow
+      "     augroup lsp_document_highlight
+      "       autocmd!
+      "       autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+      "       autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      "     augroup END
+      "   ]], false)
+      " end
+    "}
+
 "lsp options
 " LSP Configs
 lua << EOF
+    local cmp = require'cmp'
+    cmp.setup({
+    snippet = {
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+    
+   
     require('nvim-tree').setup()
     local nvim_lsp = require('lspconfig')
     local on_attach = function(client, bufNumber)
@@ -214,40 +273,10 @@ lua << EOF
       buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
       buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
       buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-
-      if client.resolved_capabilities.document_highlight then
-        vim.api.nvim_exec([[
-          hi LspReferenceRead cterm=bold ctermbg=yellow guibg=LightYellow
-          hi LspReferenceText cterm=bold ctermbg=yellow guibg=LightYellow
-          hi LspReferenceWrite cterm=bold ctermbg=yellow guibg=LightYellow
-          augroup lsp_document_highlight
-            autocmd!
-            autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-            autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-          augroup END
-        ]], false)
-      end
     end
 
-    for _, lsp in ipairs({'hls', 'pyright', 'jdtls', 'rust_analyzer', 'ccls' }) do
+    for _, lsp in ipairs({'hls', 'pyright', 'jdtls', 'ccls', 'ocamllsp' }) do
       nvim_lsp[lsp].setup({ on_attach = on_attach })
     end
-    require('lspconfig').rust_analyzer.setup {
-      -- Other Configs ...
-      settings = {
-        ["rust-analyzer"] = {
-          -- Other Settings ...
-          procMacro = {
-            ignored = {
-                leptos_macro = {
-                    -- optional: --
-                    -- "component",
-                    "server",
-                },
-            },
-          },
-        },
-      }
-    }
 EOF
-au FileType * call SuperTabSetDefaultCompletionType("<c-x><c-o>")
+set background =light
